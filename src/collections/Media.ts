@@ -4,7 +4,7 @@ import { isAuth, isAdmin, isSelf } from '../helpers';
 export const Media: CollectionConfig = {
     slug: 'media',
     access: {
-        read: (ctx) => isAuth(ctx),
+        read: (ctx) => true,
         create: (ctx) => isAuth(ctx),
         update: (ctx) => isSelf(ctx) || isAdmin(ctx),
         delete: (ctx) => isAdmin(ctx),

@@ -1,6 +1,10 @@
-import { buildConfig } from 'payload/config';
-import path from 'path';
-import { payloadCloud } from '@payloadcms/plugin-cloud';
+import path from 'path'
+
+import { payloadCloud } from '@payloadcms/plugin-cloud'
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { webpackBundler } from '@payloadcms/bundler-webpack'
+import { slateEditor } from '@payloadcms/richtext-slate'
+import { buildConfig } from 'payload/config'
 
 import { Users } from './collections/Users';
 import { Media } from './collections/Media'
@@ -9,11 +13,11 @@ import { TaskCategory } from './collections/TaskCategory'
 import { Tasks } from './collections/Tasks'
 
 export default buildConfig({
-  // serverURL: `http://localhost:3521`,
-  // cors: ["http://localhost:9000", "http://192.168.1.3:9500"],
   admin: {
     user: Users.slug,
+    bundler: webpackBundler(),
   },
+  editor: slateEditor({}),
   collections: [
     Users,
     Media,
@@ -27,7 +31,8 @@ export default buildConfig({
   graphQL: {
     schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
   },
-  plugins: [
-    payloadCloud()
-  ]
-});
+  plugins: [payloadCloud()],
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URI,
+  }),
+})
